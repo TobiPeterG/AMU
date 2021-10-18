@@ -24,7 +24,7 @@
   updates properly (Don't worry if you don't know
   what plymouth is, the script handles it).
   
-  THe update will only be triggered at shutdown and NOT
+  The update will only be triggered at shutdown and NOT
   at reboot. This is to make sure that updates are only
   run when the system is not in use anymore.
 

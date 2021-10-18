@@ -44,11 +44,11 @@ fun_dist_upgrade() {
 fun_plymouth_upgrade() {
     trim=0
     prog=0
-    new_length=0
     old_length=0
     fix=7000
     while :
     do
+        new_length=0
         if [ $trim -ge 85 ]; then
             fix=$(($fix+$new_length-$old_length))
         fi

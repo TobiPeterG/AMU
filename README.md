@@ -35,7 +35,7 @@
   2. make install.sh executable (right click on the file
   -> properties -> permissions tab -> "is executable"
   
-  3. replace <root-password> in plasma-shutdown with your root password
+  3. replace root-password in plasma-shutdown with your root password
 
   4. start install.sh
 

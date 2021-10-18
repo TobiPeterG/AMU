@@ -34,8 +34,6 @@ fun_dist_upgrade() {
     fun_plymouth_finish
     cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png
     cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
-    cp /usr/share/plymouth/ubuntu-logo.png /usr/share/plymouth/ubuntu-logo_old.png
-    cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/ubuntu-logo.png
     /bin/plymouth change-mode --shutdown
     /bin/plymouth display-message --text "Bereinige System..."
     apt-get autoclean
@@ -44,13 +42,6 @@ fun_dist_upgrade() {
 }
 
 fun_plymouth_upgrade() {
-    touch /var/log/dist-upgrade/history.log
-    touch /var/log/dist-upgrade/lspci.txt
-    touch /var/log/dist-upgrade/main.log
-    touch /var/log/dist-upgrade/xorg_fixup.log
-    touch /var/log/dist-upgrade/apt-term.log
-    touch /var/log/dist-upgrade/apt.log
-    touch /tmp/shutdown_lock.txt
     trim=0
     prog=0
     new_length=0
@@ -61,7 +52,26 @@ fun_plymouth_upgrade() {
         if [ $trim -ge 85 ]; then
             fix=$(($fix+$new_length-$old_length))
         fi
-        new_length=$(($(wc -l < /var/log/dist-upgrade/history.log) + $(wc -l < /var/log/dist-upgrade/lspci.txt) + $(wc -l < /var/log/dist-upgrade/main.log) + $(wc -l < /var/log/dist-upgrade/xorg_fixup.log) + $(wc -l < /var/log/dist-upgrade/apt-term.log) + $(wc -l < /var/log/dist-upgrade/apt.log)))
+
+        if [ -f /var/log/dist-upgrade/history.log ]; then
+            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/history.log)))
+        fi
+        if [ -f /var/log/dist-upgrade/lspci.txt ]; then
+            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/lspci.txt)))
+        fi
+        if [ -f /var/log/dist-upgrade/main.log ]; then
+            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/main.log)))
+        fi
+        if [ -f /var/log/dist-upgrade/xorg_fixup.log ]; then
+            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/xorg_fixup.log)))
+        fi
+        if [ -f /var/log/dist-upgrade/apt-term.log ]; then
+            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/apt-term.log)))
+        fi
+        if [ -f /var/log/dist-upgrade/apt.log ]; then
+            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/apt.log)))
+        fi
+
         prog=$(echo "scale=2 ; $new_length / ($fix) * 100" | bc)
         trim=${prog%.*}
         /bin/plymouth system-update --progress $prog
@@ -72,7 +82,7 @@ fun_plymouth_upgrade() {
 }
 
 fun_plymouth_finish() {
-if [ ! -e /tmp/shutdown_lock.txt ]; then
+if [ ! -f /tmp/shutdown_lock.txt ]; then
   prog=0
 else
   prog=$(head /tmp/shutdown_lock.txt)

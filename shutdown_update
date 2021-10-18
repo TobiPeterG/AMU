@@ -49,9 +49,6 @@ fun_plymouth_upgrade() {
     while :
     do
         new_length=0
-        if [ $trim -ge 85 ]; then
-            fix=$(($fix+$new_length-$old_length))
-        fi
 
         if [ -f /var/log/dist-upgrade/history.log ]; then
             new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/history.log)))
@@ -71,7 +68,11 @@ fun_plymouth_upgrade() {
         if [ -f /var/log/dist-upgrade/apt.log ]; then
             new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/apt.log)))
         fi
-
+        
+        if [ $trim -ge 85 ]; then
+            fix=$(($fix+$new_length-$old_length))
+        fi
+        
         prog=$(echo "scale=2 ; $new_length / ($fix) * 100" | bc)
         trim=${prog%.*}
         /bin/plymouth system-update --progress $trim

@@ -1,0 +1,12 @@
+[Unit]
+Description=Update on Startup
+RequiresMountsFor=/ /home /boot
+After=network-online.target multi-user.target local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/services/startup_update
+TimeoutSec=infinity
+
+[Install]
+WantedBy=multi-user.target

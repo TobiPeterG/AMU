@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ ! -e /tmp/shutdown_lock.txt ]; then
+        touch /tmp/shutdown_lock.txt
+        echo "<root-password>" | sudo -S systemctl start update_shutdown
+else
+	systemctl poweroff
+fi

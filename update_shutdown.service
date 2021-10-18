@@ -1,0 +1,10 @@
+[Unit]
+Description=Update on Shutdown
+RequiresMountsFor=/ /home /boot
+After=network-online.target multi-user.target local-fs.target
+Before=shutdown.target halt.target poweroff.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/services/shutdown_update
+TimeoutSec=infinity

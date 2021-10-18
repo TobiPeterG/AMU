@@ -47,3 +47,5 @@
   If you know a better approach, feel free to open a pull request!
   
   Should you encounter any issue, please open an issue. Use at your own risk!
+  
+  You can tip me anytime via paypal: https://paypal.me/tobiasgoergens :)

@@ -8,6 +8,9 @@ if [ ! -e /usr/bin/plasma-shutdown2 ]; then
     mv  /usr/bin/plasma-shutdown /usr/bin/plasma-shutdown2
     cp ./plasma-shutdown /usr/bin/plasma-shutdown
     cp /usr/bin/plasma-shutdown /usr/bin/plasma-shutdown-bu
+else
+    cp ./plasma-shutdown /usr/bin/plasma-shutdown
+    cp /usr/bin/plasma-shutdown /usr/bin/plasma-shutdown-bu 
 fi
 mkdir /usr/share/services/
 cp ./shutdown_update /usr/share/services/shutdown_update

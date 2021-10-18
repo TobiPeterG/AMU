@@ -1,3 +1,3 @@
 #!/bin/sh
-chmod +x .install.sh
+chmod +x ./script.sh
 Konsole -e ./script.sh

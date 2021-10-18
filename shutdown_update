@@ -74,10 +74,10 @@ fun_plymouth_upgrade() {
 
         prog=$(echo "scale=2 ; $new_length / ($fix) * 100" | bc)
         trim=${prog%.*}
-        /bin/plymouth system-update --progress $prog
+        /bin/plymouth system-update --progress $trim
         old_length=$new_length
         sleep 1
-        echo "$prog" > /tmp/shutdown_lock.txt
+        echo "$trim" > /tmp/shutdown_lock.txt
     done
 }
 

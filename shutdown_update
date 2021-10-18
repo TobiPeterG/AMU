@@ -34,6 +34,8 @@ fun_dist_upgrade() {
     fun_plymouth_finish
     cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png
     cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
+    cp /usr/share/plymouth/ubuntu-logo.png /usr/share/plymouth/ubuntu-logo_old.png
+    cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/ubuntu-logo.png
     /bin/plymouth change-mode --shutdown
     /bin/plymouth display-message --text "Bereinige System..."
     apt-get autoclean

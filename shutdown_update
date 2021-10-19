@@ -98,7 +98,10 @@ fi
 
 if ! systemctl list-jobs | grep -E -q 'reboot.target.*start';
 then
-sleep 3
+while ! /bin/plymouth --ping;
+do
+    sleep 0.5
+done
 export DEBIAN_FRONTEND=noninteractive
 /bin/plymouth display-message --text "Es wird nach Aktualisierungen gesucht..."
 pkcon refresh

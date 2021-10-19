@@ -9,6 +9,7 @@ cp ./startup_update /usr/share/services/startup_update
 cp ./update_shutdown.service /etc/systemd/system/update_shutdown.service
 cp ./update_startup.service /etc/systemd/system/update_startup.service
 sed -i 's/30min/infinity/' /lib/systemd/system/poweroff.target
+chattr +i /lib/systemd/system/poweroff.target
 systemctl daemon-reload
 systemctl enable update_startup.service
 systemctl enable update_shutdown.service

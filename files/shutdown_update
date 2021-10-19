@@ -12,7 +12,6 @@ fun_update() {
     apt-get upgrade -y
     apt-get autoclean
     apt-get autoremove -y
-    cp /usr/bin/plasma-shutdown-bu /usr/bin/plasma-shutdown
 }
 
 fun_plymouth_update() {
@@ -39,7 +38,6 @@ fun_dist_upgrade() {
     /bin/plymouth display-message --text "Clean up System..."
     apt-get autoclean
     apt-get autoremove -y
-    cp /usr/bin/plasma-shutdown-bu /usr/bin/plasma-shutdown
 }
 
 fun_plymouth_upgrade() {

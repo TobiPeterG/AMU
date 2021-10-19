@@ -1,4 +1,5 @@
 #!/bin/sh
+#!/bin/sh
 
 fun_update() {
 
@@ -68,11 +69,11 @@ fun_plymouth_upgrade() {
         if [ -f /var/log/dist-upgrade/apt.log ]; then
             new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/apt.log)))
         fi
-        
+
         if [ $trim -ge 85 ]; then
             fix=$(($fix+$new_length-$old_length))
         fi
-        
+
         prog=$(echo "scale=2 ; $new_length / ($fix) * 100" | bc)
         trim=${prog%.*}
         /bin/plymouth system-update --progress $trim
@@ -95,10 +96,7 @@ fi
         sleep 3
     done
 }
-
-
-/sbin/plymouthd --mode=shutdown --attach-to-session
-/bin/plymouth show-splash
+sleep 5
 export DEBIAN_FRONTEND=noninteractive
 /bin/plymouth display-message --text "Es wird nach Aktualisierungen gesucht..."
 pkcon refresh
@@ -115,5 +113,4 @@ sleep 3
 fi
 fi
 /bin/plymouth display-message --text ""
-plymouth --quit
-/usr/bin/plasma-shutdown
+

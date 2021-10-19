@@ -8,7 +8,7 @@ fun_update() {
     pkcon update -p -y > /tmp/update_status.txt
     kill $fun_plymouth_update_pid
     /bin/plymouth change-mode --shutdown
-    /bin/plymouth display-message --text "Bereinige System..."
+    /bin/plymouth display-message --text "Clean up System..."
     apt-get upgrade -y
     apt-get autoclean
     apt-get autoremove -y
@@ -36,7 +36,7 @@ fun_dist_upgrade() {
     cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png
     cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
     /bin/plymouth change-mode --shutdown
-    /bin/plymouth display-message --text "Bereinige System..."
+    /bin/plymouth display-message --text "Clean up System..."
     apt-get autoclean
     apt-get autoremove -y
     cp /usr/bin/plasma-shutdown-bu /usr/bin/plasma-shutdown
@@ -104,7 +104,7 @@ do
     sleep 0.5
 done
 export DEBIAN_FRONTEND=noninteractive
-/bin/plymouth display-message --text "Es wird nach Aktualisierungen gesucht..."
+/bin/plymouth display-message --text "Searching for Updates..."
 pkcon refresh
 update_list=$(pkcon get-updates)
 if ! echo "$update_list" | grep -q "There are no updates available at this time."; then
@@ -114,7 +114,7 @@ if do-release-upgrade -c;
 then
     fun_dist_upgrade & wait
 else
-/bin/plymouth display-message --text "Keine Aktualisierungen gefunden!"
+/bin/plymouth display-message --text "No updates found!"
 sleep 3
 fi
 fi

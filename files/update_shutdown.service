@@ -1,0 +1,17 @@
+[Unit]
+Description=Update on Shutdown
+RequiresMountsFor=/ /home /boot
+DefaultDependencies=no
+Requires=network-online.target multi-user.target local-fs-pre.target local-fs.target packagekit.service NetworkManager.service
+After=network-online.target multi-user.target local-fs-pre.target local-fs.target packagekit.service NetworkManager.service
+Before=systemd-poweroff.service shutdown.target umount.target final.target systemd-halt.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+ExecStop=/usr/share/services/shutdown_update
+TimeoutSec=infinity
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

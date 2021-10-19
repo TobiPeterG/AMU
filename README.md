@@ -46,6 +46,17 @@
   
   That's it! Enjoy!
   
+# UNINSTALL
+  
+  1. make uninstall.sh executable (right click on the file
+  -> properties -> permissions tab -> "is executable"
+  
+  2. start uninstall.sh
+
+  3. reboot
+  
+  After that, updates should not be applied at shutdown anymore
+  
 # Contribution
   I'm open and welcome contributions to make this script better and/or available to more distributions.
   Currently, the script is quite hacky as it is not using the offline-update service, but a custom

@@ -10,11 +10,7 @@
   well.
 
   The script requires root privileges to copy the
-  files to the corresponding locations. Please note that
-  in file plasma-shutdown the <root-password> needs to be
-  specified in order for the script to work! If you
-  haven't done this before executing this file, you need
-  to edit it and execute this script again.
+  files to the corresponding locations.
 
   This script also includes a service that updates your
   flatpak and snap packages at startup."

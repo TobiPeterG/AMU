@@ -2,8 +2,6 @@
 echo "This script will install my custom script to\nupdate your system when it's being shutdown.\nIt is tested on Kubuntu 21.04 and 21.10, but should work\nwith future versions as well.\n\nThe script requires root privileges to copy the files to the\ncorresponding locations.\n\nThis script also includes a service that updates your\nflatpak and snap packages at startup."
 printf 'press [ENTER] to continue, [CTRL]+[C] to abort...'
 read _
-chmod +x ./shutdown_update
-chmod +x ./startup_update
 
 mkdir /usr/share/services/
 cp ./shutdown_update /usr/share/services/shutdown_update
@@ -20,5 +18,7 @@ cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/s
 cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
 cp /usr/share/plymouth/ubuntu-logo.png /usr/share/plymouth/ubuntu-logo_old.png
 cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/ubuntu-logo.png
+chmod +x /usr/share/services/shutdown_update
+chmod +x /usr/share/services/startup_update
 update-initramfs -c -k all
 

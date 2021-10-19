@@ -26,6 +26,7 @@ fun_plymouth_update() {
 fun_dist_upgrade() {
     /bin/plymouth change-mode --system-upgrade
     /bin/plymouth system-update --progress=0
+    service cron stop
     fun_plymouth_upgrade & fun_plymouth_upgrade_pid=$!
     echo "force-confdef" >> /etc/dpkg/dpkg.conf
     echo "force-confold" >> /etc/dpkg/dpkg.conf

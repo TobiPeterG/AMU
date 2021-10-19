@@ -32,6 +32,7 @@
   - use systemd to stay compatible over system updates
   - integration with all common distributions
   - graphical integration with progress bars
+  - automatically update from one Ubuntu version to another (e.g. 21.04 -> 21.10)
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
 

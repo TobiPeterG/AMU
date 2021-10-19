@@ -1,5 +1,4 @@
 #!/bin/sh
-#!/bin/sh
 
 fun_update() {
 
@@ -96,7 +95,10 @@ fi
         sleep 3
     done
 }
-sleep 5
+
+if ! systemctl list-jobs | grep -E -q 'reboot.target.*start';
+then
+sleep 1
 export DEBIAN_FRONTEND=noninteractive
 /bin/plymouth display-message --text "Es wird nach Aktualisierungen gesucht..."
 pkcon refresh
@@ -113,4 +115,4 @@ sleep 3
 fi
 fi
 /bin/plymouth display-message --text ""
-
+fi

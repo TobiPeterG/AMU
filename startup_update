@@ -1,3 +1,0 @@
-#!/bin/sh
-/bin/plymouth display-message --text "Aktualisiere Anwendungen..."
-flatpak update -y & snap refresh & wait

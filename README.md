@@ -35,7 +35,7 @@
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
   
-# INSTALLATION:
+# INSTALLATION
 
   1. Clone this Repository & extract the zip
   
@@ -46,7 +46,7 @@
   
   That's it! Enjoy!
   
-# UNINSTALL
+# REMOVAL
   
   1. make uninstall.sh executable (right click on the file
   -> properties -> permissions tab -> "is executable"

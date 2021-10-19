@@ -24,8 +24,7 @@
   updates properly (Don't worry if you don't know
   what plymouth is, the script handles it).
   
-  The script in its current form will be triggered at shutdown and reboot.
-  I hope to be able to fix it in the near future
+  The updates are only executed at shutdown, not at reboot.
 
 # INSTALLATION:
 
@@ -42,7 +41,8 @@
   
 # Contribution
   I'm open and welcome contributions to make this script better and/or available to more distributions.
-  Currently, the script is quite hacky as it replaces an executable called by Plasma at shutdown.
+  Currently, the script is quite hacky as it is not using the offline-update service, but a custom
+  solution and the progress bar is not really good as well.
   If you know a better approach, feel free to open a pull request!
   
   Should you encounter any issue, please open an issue. Use at your own risk!

@@ -1,8 +1,11 @@
-# Update Kubuntu at shutdown and startup (with plymouth integration)
-  THIS SCRIPT IS ONLY(!) THOUGHT FOR KUBUNTU INSTALLATIONS
+# Update Ubuntu at shutdown and startup (with plymouth integration)
+  THIS SCRIPT IS ONLY(!) THOUGHT FOR UBUNTU-BASED INSTALLATIONS
   AND NOTHING ELSE!  IT WILL NOT WORK AS INTENDED OR MAKE
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
   USE AT YOUR OWN RISK!
+  
+  Not on Ubuntu?
+  Use the basic version for all distributions: COMING SOON
 
   This script will install my custom script to update your
   system when it's being shutdown. It is tested on Kubuntu
@@ -21,7 +24,17 @@
   what plymouth is, the script handles it).
   
   The updates are only executed at shutdown, not at reboot.
+  
+# Features
 
+  - automatically search for update at shutdown
+  - update at shutdown only, not at reboots
+  - use systemd to stay compatible over system updates
+  - integration with all common distributions
+  - graphical integration with progress bars
+  - updates your flatpak and snap packages at startup
+  - independant of the desktop environment
+  
 # INSTALLATION:
 
   1. Clone this Repository & extract the zip

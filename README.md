@@ -34,6 +34,15 @@
   - graphical integration with progress bars
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
+
+# Pictures
+
+  Installing normal Updates:
+  ![Installing normal Updates](https://user-images.githubusercontent.com/19935382/137891911-3862eeac-b4ca-47f0-be1f-7f735848db9b.png)
+  
+  Upgrading Ubuntu version:
+  ![Upgrading Ubuntu version](https://user-images.githubusercontent.com/19935382/137891983-b8e5015e-8f56-4af0-97c1-1eb651490beb.png)
+
   
 # INSTALLATION
 

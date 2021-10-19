@@ -14,10 +14,13 @@ systemctl enable update_shutdown.service
 systemctl start update_shutdown.service
 apt-get install --reinstall plymouth-theme-spinner -y
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/bgrt/bgrt.plymouth
-cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png
-cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
-cp /usr/share/plymouth/ubuntu-logo.png /usr/share/plymouth/ubuntu-logo_old.png
-cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/ubuntu-logo.png
+if [ -f /usr/share/plymouth/themes/kubuntu-logo/images/logo.png ];
+then
+  cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png
+  cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
+  cp /usr/share/plymouth/ubuntu-logo.png /usr/share/plymouth/ubuntu-logo_old.png
+  cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/ubuntu-logo.png
+fi
 chmod +x /usr/share/services/shutdown_update
 chmod +x /usr/share/services/startup_update
 update-initramfs -c -k all

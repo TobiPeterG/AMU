@@ -106,14 +106,14 @@ then
     pkcon refresh
     update_list=$(pkcon get-updates)
     if ! echo "$update_list" | grep -q "There are no updates available at this time."; then
-       /bin/plymouth display-message --text "Fix broken packages..."
+       /bin/plymouth display-message --text "Check for broken packages..."
         dpkg --configure -a
         apt --fix-broken install -y
         fun_update & wait
     else
         if do-release-upgrade -c;
         then
-            /bin/plymouth display-message --text "Fix broken packages..."
+            /bin/plymouth display-message --text "Check for broken packages..."
             dpkg --configure -a
             apt --fix-broken install -y
             fun_dist_upgrade & wait

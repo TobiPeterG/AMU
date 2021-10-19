@@ -27,7 +27,7 @@
   - automatically search for update at shutdown
   - update at shutdown only, not at reboots
   - use systemd to stay compatible over system updates
-  - integration with all common distributions
+  - integration with all Ubuntu flavors
   - graphical integration with progress bars
   - automatically update from one Ubuntu version to another (e.g. 21.04 -> 21.10)
   - updates your flatpak and snap packages at startup

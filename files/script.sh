@@ -3,6 +3,7 @@ echo "This script will install my custom script to\nupdate your system when it's
 printf 'press [ENTER] to continue, [CTRL]+[C] to abort...'
 read _
 
+cd ./files
 mkdir /usr/share/services/
 cp ./shutdown_update /usr/share/services/shutdown_update
 cp ./startup_update /usr/share/services/startup_update

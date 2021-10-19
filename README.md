@@ -4,9 +4,6 @@
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
   USE AT YOUR OWN RISK!
   
-  Not on Ubuntu?
-  Use the basic version for all distributions: https://github.com/TobiPeterG/linux_automatic_updates
-
   This script will install my custom script to update your
   system when it's being shutdown. It is tested on Kubuntu
   21.04 and 21.10, but should work with future versions as

@@ -32,6 +32,7 @@
   - automatically update from one Ubuntu version to another (e.g. 21.04 -> 21.10)
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
+  - logs are saved at /var/log/ubuntu-automatic-update/
 
 # Pictures
 

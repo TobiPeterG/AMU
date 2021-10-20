@@ -5,20 +5,19 @@ fun_update() {
     /bin/plymouth change-mode --updates
     /bin/plymouth system-update --progress=0
     fun_plymouth_update & fun_plymouth_update_pid=$!
-    pkcon update -p -y > /tmp/update_status.txt
+    unbuffer apt full-upgrade -y 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
+    unbuffer apt autoremove -y 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
     kill $fun_plymouth_update_pid
+    /bin/plymouth system-update --progress=100
+    sleep 3
     /bin/plymouth change-mode --shutdown
-    /bin/plymouth display-message --text "Clean up System..."
-    apt-get upgrade -y
-    apt-get autoclean
-    apt-get autoremove -y
 }
 
 fun_plymouth_update() {
     while :
     do
-        /bin/plymouth system-update --progress $(grep -oP "(?<=Percentage:	).*" /tmp/update_status.txt | tail -1)
-        sleep 1
+        /bin/plymouth system-update --progress $(grep -oE '(?<=\[)[0-9]\%|[0-9][0-9]\%|100\%(?=\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
+        sleep 0.5
     done
 }
 
@@ -27,17 +26,20 @@ fun_dist_upgrade() {
     /bin/plymouth system-update --progress=0
     systemctl kill cron
     fun_plymouth_upgrade & fun_plymouth_upgrade_pid=$!
+    if ! grep -q "force-confdef" /etc/dpkg/dpkg.conf; then
     echo "force-confdef" >> /etc/dpkg/dpkg.conf
+    fi
+    if ! grep -q "force-confold" /etc/dpkg/dpkg.conf; then
     echo "force-confold" >> /etc/dpkg/dpkg.conf
+    fi
     /usr/bin/do-release-upgrade -f DistUpgradeViewNonInteractive --allow-third-party
+    unbuffer apt autoremove -y 2>&1 > /var/log/dist-upgrade/apt.log
     kill $fun_plymouth_upgrade_pid
     fun_plymouth_finish
     cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png
     cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
     /bin/plymouth change-mode --shutdown
     /bin/plymouth display-message --text "Clean up System..."
-    apt-get autoclean
-    apt-get autoremove -y
 }
 
 fun_plymouth_upgrade() {

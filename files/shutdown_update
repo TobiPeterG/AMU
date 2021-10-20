@@ -16,7 +16,7 @@ fun_update() {
 fun_plymouth_update() {
     while :
     do
-        /bin/plymouth system-update --progress $(grep -oP '(?<=\[ )[0-9](?=\%\])|[0-9][0-9](?=\%\])|100(?=\%\])' /home/tobias/log2 | tail -1 /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
+        /bin/plymouth system-update --progress $(grep -aoP '(?<=\[ )[0-9](?=\%\])|(?<=\[ )[0-9][0-9](?=\%\])|(?<=\[ )100(?=\%\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
         sleep 0.5
     done
 }

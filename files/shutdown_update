@@ -16,7 +16,7 @@ fun_update() {
 fun_plymouth_update() {
     while :
     do
-        /bin/plymouth system-update --progress $(grep -aoP '(?<=\[ )[0-9](?=\%\])|(?<=\[ )[0-9][0-9](?=\%\])|(?<=\[ )100(?=\%\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
+        /bin/plymouth system-update --progress $(grep -aoP '(?<=\[  )[0-9](?=\%\])|(?<=\[ )[0-9][0-9](?=\%\])|(?<=\[)100(?=\%\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
         sleep 0.5
     done
 }
@@ -27,10 +27,10 @@ fun_dist_upgrade() {
     systemctl kill cron
     fun_plymouth_upgrade & fun_plymouth_upgrade_pid=$!
     if ! grep -q "force-confdef" /etc/dpkg/dpkg.conf; then
-        echo "force-confdef" >> /etc/dpkg/dpkg.conf
+    echo "force-confdef" >> /etc/dpkg/dpkg.conf
     fi
     if ! grep -q "force-confold" /etc/dpkg/dpkg.conf; then
-        echo "force-confold" >> /etc/dpkg/dpkg.conf
+    echo "force-confold" >> /etc/dpkg/dpkg.conf
     fi
     /usr/bin/do-release-upgrade -f DistUpgradeViewNonInteractive --allow-third-party
     unbuffer apt-get autoremove -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt

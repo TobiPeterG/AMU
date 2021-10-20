@@ -5,8 +5,8 @@ fun_update() {
     /bin/plymouth change-mode --updates
     /bin/plymouth system-update --progress=0
     fun_plymouth_update & fun_plymouth_update_pid=$!
-    unbuffer apt full-upgrade -y 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
-    unbuffer apt autoremove -y 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
+    unbuffer apt-get full-upgrade -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
+    unbuffer apt-get autoremove -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
     kill $fun_plymouth_update_pid
     /bin/plymouth system-update --progress=100
     sleep 3
@@ -27,13 +27,13 @@ fun_dist_upgrade() {
     systemctl kill cron
     fun_plymouth_upgrade & fun_plymouth_upgrade_pid=$!
     if ! grep -q "force-confdef" /etc/dpkg/dpkg.conf; then
-        echo "force-confdef" >> /etc/dpkg/dpkg.conf
+    echo "force-confdef" >> /etc/dpkg/dpkg.conf
     fi
     if ! grep -q "force-confold" /etc/dpkg/dpkg.conf; then
-        echo "force-confold" >> /etc/dpkg/dpkg.conf
+    echo "force-confold" >> /etc/dpkg/dpkg.conf
     fi
     /usr/bin/do-release-upgrade -f DistUpgradeViewNonInteractive --allow-third-party
-    unbuffer apt autoremove -y 2>&1 > /var/log/dist-upgrade/apt.log
+    unbuffer apt-get autoremove -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
     kill $fun_plymouth_upgrade_pid
     fun_plymouth_finish
     cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png

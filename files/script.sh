@@ -5,6 +5,7 @@ read _
 
 cd ./files
 mkdir /usr/share/services/
+mkdir /var/log/ubuntu-automatic-update/
 cp ./shutdown_update /usr/share/services/shutdown_update
 cp ./startup_update /usr/share/services/startup_update
 cp ./update_shutdown.service /etc/systemd/system/update_shutdown.service

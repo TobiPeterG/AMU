@@ -6,7 +6,7 @@ fun_update() {
     /bin/plymouth system-update --progress=0
     fun_plymouth_update & fun_plymouth_update_pid=$!
     unbuffer apt-get full-upgrade -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
-    unbuffer apt-get autoremove -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
+    unbuffer apt-get autoremove -y --show-progress 2>&1 >> /var/log/ubuntu-automatic-update/update_status.txt
     kill $fun_plymouth_update_pid
     /bin/plymouth system-update --progress=100
     sleep 3

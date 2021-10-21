@@ -5,4 +5,5 @@ dpkg --configure -a
 apt --fix-broken install -y
 apt-mark unhold apport
 apt-get update
-apt-get install --only-upgrade apport
+DEBIAN_FRONTEND=noninteractive apt-get install --only-upgrade apport
+DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -d

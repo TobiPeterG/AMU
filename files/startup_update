@@ -1,6 +1,8 @@
 #!/bin/sh
 /bin/plymouth display-message --text "Aktualisiere Anwendungen..."
 flatpak update -y & snap refresh & wait
+dpkg --configure -a
+apt --fix-broken install -y
 apt-mark unhold apport
 apt-get update
 apt-get install --only-upgrade apport

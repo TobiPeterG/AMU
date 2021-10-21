@@ -5,7 +5,7 @@ fun_update() {
     /bin/plymouth change-mode --updates
     /bin/plymouth system-update --progress=0
     fun_plymouth_update & fun_plymouth_update_pid=$!
-    unbuffer apt-get full-upgrade -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
+    unbuffer apt-get full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
     unbuffer apt-get autoremove -y --show-progress 2>&1 >> /var/log/ubuntu-automatic-update/update_status.txt
     kill $fun_plymouth_update_pid
     /bin/plymouth system-update --progress=100
@@ -16,7 +16,7 @@ fun_update() {
 fun_plymouth_update() {
     while :
     do
-        /bin/plymouth system-update --progress $(grep -aoP '(?<=\[  )[0-9](?=\%\])|(?<=\[ )[0-9][0-9](?=\%\])|(?<=\[)100(?=\%\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
+        /bin/plymouth system-update --progress $(grep -aoP '(?<=\[  )[0-9](?=\%\])|(?<=\[ )[0-9][0-9](?=\%\])|(?<=\[)100(?=\%\])|[0-9](?=\% \[.*\])|[0-9][0-9](?=\% \[.*\])|100(?=\% \[.*\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
         sleep 0.1
     done
 }

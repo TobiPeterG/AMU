@@ -15,7 +15,7 @@ systemctl daemon-reload
 systemctl enable update_startup.service
 systemctl enable update_shutdown.service
 systemctl start update_shutdown.service
-apt-get install expect
+apt-get install expect -y
 apt-get install --reinstall plymouth-theme-spinner -y
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/bgrt/bgrt.plymouth
 if [ -f /usr/share/plymouth/themes/kubuntu-logo/images/logo.png ];

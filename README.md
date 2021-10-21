@@ -34,6 +34,11 @@
   - independant of the desktop environment
   - logs are saved at /var/log/ubuntu-automatic-update/
 
+# Known Issues
+  - Updates have to be downloaded before installation (done at startup)
+  - might be unreliable, as it can't be guaranteed that the required services stay active
+
+  These issues will be fixed with Ubuntu 22.04!
 # Pictures
 
   Installing normal Updates:

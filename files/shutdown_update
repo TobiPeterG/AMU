@@ -17,14 +17,13 @@ fun_plymouth_update() {
     while :
     do
         /bin/plymouth system-update --progress $(grep -aoP '(?<=\[  )[0-9](?=\%\])|(?<=\[ )[0-9][0-9](?=\%\])|(?<=\[)100(?=\%\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
-        sleep 0.5
+        sleep 0.1
     done
 }
 
 fun_dist_upgrade() {
     /bin/plymouth change-mode --system-upgrade
     /bin/plymouth system-update --progress=0
-    systemctl kill cron
     fun_plymouth_upgrade & fun_plymouth_upgrade_pid=$!
     if ! grep -q "force-confdef" /etc/dpkg/dpkg.conf; then
         echo "force-confdef" >> /etc/dpkg/dpkg.conf
@@ -78,7 +77,7 @@ fun_plymouth_upgrade() {
         trim=${prog%.*}
         /bin/plymouth system-update --progress $trim
         old_length=$new_length
-        sleep 1
+        sleep 0.5
         echo "$trim" > /tmp/shutdown_lock.txt
     done
 }
@@ -105,20 +104,28 @@ then
     done
     export DEBIAN_FRONTEND=noninteractive
     /bin/plymouth display-message --text "Searching for Updates..."
-    pkcon refresh
-    update_list=$(pkcon get-updates)
-    if ! echo "$update_list" | grep -q "There are no updates available at this time."; then
-       /bin/plymouth display-message --text "Check for broken packages..."
+    apt-mark hold apport
+    apt-get update
+    apt list --upgradable > /var/log/ubuntu-automatic-update/upgradable.txt
+    if ! wc -l < /var/log/ubuntu-automatic-update/upgradable.txt -eq 1; then
+        /bin/plymouth display-message --text "Preparing Update..."
         dpkg --configure -a
         apt --fix-broken install -y
         fun_update & wait
+        /bin/plymouth display-message --text "Validating Updates..."
+        dpkg --configure -a
+        apt --fix-broken install -y
     else
         if do-release-upgrade -c;
         then
-            /bin/plymouth display-message --text "Check for broken packages..."
+            /bin/plymouth display-message --text "Preparing System Upgrade..."
+            systemctl kill cron
             dpkg --configure -a
             apt --fix-broken install -y
             fun_dist_upgrade & wait
+            /bin/plymouth display-message --text "Validating updates..."
+            dpkg --configure -a
+            apt --fix-broken install -y
         else
             /bin/plymouth display-message --text "No updates found!"
             sleep 3

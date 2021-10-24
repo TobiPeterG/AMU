@@ -36,7 +36,7 @@
 
 # Known Issues
   - Updates have to be downloaded before installation (done at startup)
-  - might be unreliable, as it can't be guaranteed that the required services stay active
+  - might be unreliable, as it can't be guaranteed that the required services stay active (will be fixed with systemd 249, which will probably land in Ubuntu     22.04; until then this script should not be used at all)
 
   These issues will be fixed with Ubuntu 22.04!
 # Pictures

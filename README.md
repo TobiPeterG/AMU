@@ -27,7 +27,7 @@
   
 # Features
 
-  - automatically search for update at shutdown
+  - automatically search for updates at shutdown
   - update at shutdown only, not at reboots
   - use systemd to stay compatible over system updates
   - integration with all Manjaro flavors

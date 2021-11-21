@@ -93,7 +93,7 @@
 # Contribution
   I'm open and welcome contributions to make this script better and/or available to more distributions.
   Currently, the script is quite hacky as it is not using the offline-update service, but a custom
-  solution and the progress bar is not really good as well.
+  solution.
   If you know a better approach, feel free to open a pull request!
   
   Should you encounter any issue, please open an issue. Use at your own risk!

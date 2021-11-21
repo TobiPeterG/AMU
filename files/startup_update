@@ -1,2 +1,3 @@
 #!/bin/sh
+#update flatpaks and snaps
 flatpak update -y & snap refresh & wait

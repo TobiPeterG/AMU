@@ -86,6 +86,10 @@
   
   After that, updates should not be applied at shutdown anymore
   
+# TODO
+  - only apply updates when connected to power AND battery is over 50% charged
+  - ...
+  
 # Contribution
   I'm open and welcome contributions to make this script better and/or available to more distributions.
   Currently, the script is quite hacky as it is not using the offline-update service, but a custom

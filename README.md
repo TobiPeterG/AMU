@@ -1,4 +1,4 @@
-# Update Manjaro at shutdown and startup (with plymouth integration)
+# Update Manjaro at shutdown and startup
   THIS SCRIPT IS ONLY(!) THOUGHT FOR MANJARO-BASED INSTALLATIONS
   AND NOTHING ELSE!  IT WILL NOT WORK AS INTENDED OR MAKE
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
@@ -16,10 +16,10 @@
   This script also includes a service that updates your
   flatpak and snap packages at startup.
 
-  In order for the script to work, you need to install Plymouth
+  __In order for the script to work, you need to install Plymouth
   using the installation guide here:
   https://wiki.manjaro.org/index.php/Plymouth
-  A step-by-step explanation on what to do is also given down below!
+  A step-by-step explanation on what to do is also given down below!__
   
   Pamac (the default package manager) is used to update the system!
   

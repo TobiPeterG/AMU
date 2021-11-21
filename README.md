@@ -19,6 +19,8 @@
   https://wiki.manjaro.org/index.php/Plymouth
   A step-by-step explanation on what to do is also given down below!
   
+  Pamac (the default package manager) is used to update the system!
+  
   The updates are only executed at shutdown, not at reboot.
   
 # Features

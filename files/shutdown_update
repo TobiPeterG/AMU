@@ -5,8 +5,8 @@ fun_update() {
     /bin/plymouth change-mode --updates
     /bin/plymouth system-update --progress=0
     fun_plymouth_update & fun_plymouth_update_pid=$!
-    unbuffer apt-get full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
-    unbuffer apt-get autoremove -y --show-progress 2>&1 >> /var/log/ubuntu-automatic-update/update_status.txt
+    /usr/bin/pamac update -a --force-refresh --enable-downgrade --no-confirm > /var/log/manjaro-automatic-update/update_status.txt
+    /usr/bin/pamac remove -o --no-confirm >> /var/log/manjaro-automatic-update/update_status.txt
     kill $fun_plymouth_update_pid
     /bin/plymouth system-update --progress=100
     sleep 3
@@ -16,83 +16,49 @@ fun_update() {
 fun_plymouth_update() {
     while :
     do
-        /bin/plymouth system-update --progress $(grep -aoP '(?<=\[  )[0-9](?=\%\])|(?<=\[ )[0-9][0-9](?=\%\])|(?<=\[)100(?=\%\])|[0-9](?=\% \[.*\])|[0-9][0-9](?=\% \[.*\])|100(?=\% \[.*\])' /var/log/ubuntu-automatic-update/update_status.txt | tail -1)
-        sleep 0.1
-    done
-}
-
-fun_dist_upgrade() {
-    /bin/plymouth change-mode --system-upgrade
-    /bin/plymouth system-update --progress=0
-    fun_plymouth_upgrade & fun_plymouth_upgrade_pid=$!
-    if ! grep -q "force-confdef" /etc/dpkg/dpkg.conf; then
-        echo "force-confdef" >> /etc/dpkg/dpkg.conf
-    fi
-    if ! grep -q "force-confold" /etc/dpkg/dpkg.conf; then
-        echo "force-confold" >> /etc/dpkg/dpkg.conf
-    fi
-    /usr/bin/do-release-upgrade -f DistUpgradeViewNonInteractive --allow-third-party
-    unbuffer apt-get autoremove -y --show-progress 2>&1 > /var/log/ubuntu-automatic-update/update_status.txt
-    kill $fun_plymouth_upgrade_pid
-    fun_plymouth_finish
-    cp /usr/share/plymouth/themes/spinner/watermark.png /usr/share/plymouth/themes/spinner/watermark-old.png
-    cp /usr/share/plymouth/themes/kubuntu-logo/images/logo.png /usr/share/plymouth/themes/spinner/watermark.png
-    /bin/plymouth change-mode --shutdown
-    /bin/plymouth display-message --text "Clean up System..."
-}
-
-fun_plymouth_upgrade() {
-    trim=0
-    prog=0
-    old_length=0
-    fix=7000
-    while :
-    do
-        new_length=0
-
-        if [ -f /var/log/dist-upgrade/history.log ]; then
-            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/history.log)))
+        grepper=$(grep -aoP '((^[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes)\/[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes))|(?<=\[)[0-9]*\/[0-9]*(?=\]$))' /var/log/manjaro-automatic-update/update_status.txt | tail -1)
+        if echo "$grepper" | grep -qP '(kB|MB|GB|Bytes)';
+        then
+            first=$(echo "$grepper" | grep -aoP '[0-9]*(,[0-9]*)?(?=( | )(GB|kB|MB|Bytes)\/)')
+            second=$(echo "$grepper" | grep -aoP '(?<=\/)[0-9]*(,[0-9]*)?')
+            head=$(echo "$grepper" | grep -aoP '(kB|MB|GB|Bytes)' | head -1)
+            tail=$(echo "$grepper" | grep -aoP '(kB|MB|GB|Bytes)' | tail -1)
+            if echo "$head" | grep -qP 'Bytes';
+            then
+                counter=0
+            elif echo "$head" | grep -qP 'kB';
+            then
+                counter=1
+            elif echo "$head" | grep -qP 'MB';
+            then
+                counter=2
+            elif echo "$head" | grep -qP 'GB';
+            then
+                counter=3
+            fi
+            if echo "$tail" | grep -qP 'Bytes';
+            then
+                counter=$((0-counter))
+            elif echo "$tail" | grep -qP 'kB';
+            then
+                counter=$((1-counter))
+            elif echo "$tail" | grep -qP 'MB';
+            then
+                counter=$((2-counter))
+            elif echo "$tail" | grep -qP 'GB';
+            then
+                counter=$((3-counter))
+            fi
+            if [ 0 -gt $counter ];
+            then
+                counter=0
+            fi
+            grepper=$(echo "scale=2; ${first/,/.} / (${second/,/.} * (1000^$counter))" | bc)
         fi
-        if [ -f /var/log/dist-upgrade/lspci.txt ]; then
-            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/lspci.txt)))
-        fi
-        if [ -f /var/log/dist-upgrade/main.log ]; then
-            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/main.log)))
-        fi
-        if [ -f /var/log/dist-upgrade/xorg_fixup.log ]; then
-            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/xorg_fixup.log)))
-        fi
-        if [ -f /var/log/dist-upgrade/apt-term.log ]; then
-            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/apt-term.log)))
-        fi
-        if [ -f /var/log/dist-upgrade/apt.log ]; then
-            new_length=$(($new_length + $(wc -l < /var/log/dist-upgrade/apt.log)))
-        fi
-
-        if [ $trim -ge 85 ]; then
-            fix=$(($fix+$new_length-$old_length))
-        fi
-
-        prog=$(echo "scale=2 ; $new_length / ($fix) * 100" | bc)
-        trim=${prog%.*}
-        /bin/plymouth system-update --progress $trim
-        old_length=$new_length
-        sleep 0.5
-        echo "$trim" > /tmp/shutdown_lock.txt
-    done
-}
-
-fun_plymouth_finish() {
-if [ ! -f /tmp/shutdown_lock.txt ]; then
-  prog=0
-else
-  prog=$(head /tmp/shutdown_lock.txt)
-fi
-    while [ $prog -le 100 ];
-    do
+        preprog=$(echo "scale=2 ; $grepper * 100" | bc)
+        prog=${preprog%.*}
         /bin/plymouth system-update --progress $prog
-        prog=$(($prog+1))
-        sleep 3
+        sleep 0.1
     done
 }
 
@@ -102,33 +68,12 @@ then
     do
         sleep 0.5
     done
-    export DEBIAN_FRONTEND=noninteractive
     /bin/plymouth display-message --text "Searching for Updates..."
-    apt-mark hold apport
-    apt-get update
-    apt list --upgradable > /var/log/ubuntu-automatic-update/upgradable.txt
-    if ! wc -l < /var/log/ubuntu-automatic-update/upgradable.txt -eq 1; then
-        /bin/plymouth display-message --text "Preparing Update..."
-        dpkg --configure -a
-        apt --fix-broken install -y
+    if ! /usr/bin/pamac checkupdates -a; then
         fun_update & wait
-        /bin/plymouth display-message --text "Validating Updates..."
-        dpkg --configure -a
-        apt --fix-broken install -y
     else
-        if do-release-upgrade -c;
-        then
-            /bin/plymouth display-message --text "Preparing System Upgrade..."
-            systemctl kill cron
-            dpkg --configure -a
-            apt --fix-broken install -y
-            fun_dist_upgrade & wait
-            /bin/plymouth display-message --text "Validating updates..."
-            dpkg --configure -a
-            apt --fix-broken install -y
-        else
-            /bin/plymouth display-message --text "No updates found!"
-            sleep 3
+        /bin/plymouth display-message --text "No updates found!"
+        sleep 3
         fi
     fi
     /bin/plymouth display-message --text ""

@@ -1,3 +1,3 @@
 #!/bin/sh
 chmod +x ./files/script.sh
-x-terminal-emulator -e sudo ./files/script.sh
+konsole -e sudo ./files/script.sh

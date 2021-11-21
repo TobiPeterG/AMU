@@ -4,6 +4,9 @@
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
   USE AT YOUR OWN RISK!
   
+  Using an ubuntu-based distro?
+  Have a look here: https://github.com/TobiPeterG/ubuntu_automatic_updates
+  
   This script will install my custom script to update your
   system when it's being shutdown. It is tested on Manjaro 21.1.6, but should
   work on future versions as well.

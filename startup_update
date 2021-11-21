@@ -1,2 +1,0 @@
-#!/bin/sh
-flatpak update -y & snap refresh & wait

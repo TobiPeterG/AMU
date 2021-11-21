@@ -4,7 +4,7 @@
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
   USE AT YOUR OWN RISK!
   
-  Using an ubuntu-based distro?
+  Using an Ubuntu-based distro?
   Have a look here: https://github.com/TobiPeterG/ubuntu_automatic_updates
   
   This script will install my custom script to update your

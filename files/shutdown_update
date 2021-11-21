@@ -57,24 +57,25 @@ fun_plymouth_update() {
         fi
         preprog=$(echo "scale=2 ; $grepper * 100" | bc)
         prog=${preprog%.*}
-        /bin/plymouth system-update --progress $prog
+        /bin/plymouth system-update --progress "$prog"
         sleep 0.1
     done
 }
-
-if ! systemctl list-jobs | grep -E -q 'reboot.target.*start';
+if ! (systemctl list-jobs | grep -E -q 'reboot.target.*start');
 then
     while ! /bin/plymouth --ping;
     do
         sleep 0.5
     done
-    /bin/plymouth display-message --text "Searching for Updates..."
-    if ! /usr/bin/pamac checkupdates -a; then
-        fun_update & wait
-    else
-        /bin/plymouth display-message --text "No updates found!"
-        sleep 3
+    if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || ( [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 50 ] && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -qP '(?<=state:               )charging' );
+    then
+        /bin/plymouth display-message --text "Searching for Updates..."
+        if ! /usr/bin/pamac checkupdates -a; then
+            fun_update & wait
+        else
+            /bin/plymouth display-message --text "No updates found!"
+            sleep 3
         fi
+        /bin/plymouth display-message --text ""
     fi
-    /bin/plymouth display-message --text ""
 fi

@@ -17,4 +17,5 @@ systemctl enable update_shutdown.service
 systemctl start update_shutdown.service
 chmod +x /usr/share/services/shutdown_update
 chmod +x /usr/share/services/startup_update
-
+sed -i 's/_//' /usr/share/plymouth/themes/manjaro/manjaro.plymouth
+plymouth-set-default-theme -R manjaro

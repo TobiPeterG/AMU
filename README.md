@@ -33,6 +33,7 @@
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
   - logs are saved at /var/log/manjaro-automatic-update/
+  - only apply updates when battery is charged to 50% and connected to power (notebook only)
 
 # Known Issues
   - Automatically updating the system is not recommended and can
@@ -88,8 +89,8 @@
   After that, updates should not be applied at shutdown anymore
   
 # TODO
-  - only apply updates when connected to power AND battery is over 50% charged
-  - Make installer work with different terminals
+  ~~- only apply updates when connected to power AND battery is over 50% charged~~ DONE
+  ~~- Make installer work with different terminals~~ DONE
   - ...
   
 # Contribution

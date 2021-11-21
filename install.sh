@@ -1,4 +1,5 @@
 #!/bin/sh
+#make the actual installer executable
 chmod +x ./files/script.sh
 #check which terminal is installed and start the script.sh file in it
 if hash konsole 2>/dev/null; then

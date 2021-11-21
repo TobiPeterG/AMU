@@ -52,15 +52,13 @@
      - Open ```/etc/mkinitcpio.conf``` with ```sudo nano /etc/mkinitcpio.conf```
      
      - The line looks like this afterwards: ```HOOKS="base udev plymouth ..."```
-  3. Make the manjaro theme the default plymouth theme:
-     - Type in your terminal: ```plymouth-set-default-theme -R manjaro```
   
-  4. Edit the ```grub config```:
+  3. Edit the ```grub config```:
      - Type in your terminal: ```sudo nano /etc/default/grub```
      - add the word ```splash``` to the list of arguments for the following line:
      
        ```GRUB_CMDLINE_LINUX_DEFAULT="quiet splash ..."```
-  5. Update grub:
+  4. Update grub:
      - Type in your terminal: ```sudo update-grub```
   
 # INSTALLATION

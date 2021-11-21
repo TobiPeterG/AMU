@@ -39,8 +39,6 @@
   - Automatically updating the system is not recommended and can
     potentially break your system!
     Do not expect help in the official forum should this script break your system!
-  - Plymouth NEEDS to be installed, otherwise your system won't shutdown at all!
-  - Installer currently only works with Konsole as terminal installed
 # Pictures
 
   ![Installing Updates](https://user-images.githubusercontent.com/19935382/142771245-d5674862-350c-432b-868b-690527afcff9.png)

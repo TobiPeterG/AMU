@@ -61,21 +61,25 @@ fun_plymouth_update() {
         sleep 0.1
     done
 }
-if ! (systemctl list-jobs | grep -E -q 'reboot.target.*start');
+
+if command -v /bin/plymouth;
 then
-    while ! /bin/plymouth --ping;
-    do
-        sleep 0.5
-    done
-    if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || ( [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 50 ] && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -qP '(?<=state:               )charging' );
+    if ! (systemctl list-jobs | grep -E -q 'reboot.target.*start');
     then
-        /bin/plymouth display-message --text "Searching for Updates..."
-        if ! /usr/bin/pamac checkupdates -a; then
-            fun_update & wait
-        else
-            /bin/plymouth display-message --text "No updates found!"
-            sleep 3
+        while ! /bin/plymouth --ping;
+        do
+            sleep 0.5
+        done
+        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || ( [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 50 ] && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -qP '(?<=state:               )charging' );
+        then
+            /bin/plymouth display-message --text "Searching for Updates..."
+            if ! /usr/bin/pamac checkupdates -a; then
+                fun_update & wait
+            else
+                /bin/plymouth display-message --text "No updates found!"
+                sleep 3
+            fi
+            /bin/plymouth display-message --text ""
         fi
-        /bin/plymouth display-message --text ""
     fi
 fi

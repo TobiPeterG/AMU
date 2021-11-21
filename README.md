@@ -1,24 +1,23 @@
-# Update Ubuntu at shutdown and startup (with plymouth integration)
-  THIS SCRIPT IS ONLY(!) THOUGHT FOR UBUNTU-BASED INSTALLATIONS
+# Update Manjaro at shutdown and startup (with plymouth integration)
+  THIS SCRIPT IS ONLY(!) THOUGHT FOR MANJARO-BASED INSTALLATIONS
   AND NOTHING ELSE!  IT WILL NOT WORK AS INTENDED OR MAKE
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
   USE AT YOUR OWN RISK!
   
   This script will install my custom script to update your
-  system when it's being shutdown. It is tested on Kubuntu
-  21.04 and 21.10, but should work with future versions as
-  well.
+  system when it's being shutdown. It is tested on Manjaro 21.1.6, but should
+  work on future versions as well.
 
   The script requires root privileges to copy the
   files to the corresponding locations.
 
   This script also includes a service that updates your
-  flatpak and snap packages at startup."
+  flatpak and snap packages at startup.
 
-  The installer will also activate a plymouth theme,
-  in order for the script to show the progress of
-  updates properly (Don't worry if you don't know
-  what plymouth is, the script handles it).
+  In order for the script to work, you need to install Plymouth
+  using the installation guide here:
+  https://wiki.manjaro.org/index.php/Plymouth
+  A step-by-step explanation on what to do is also given down below!
   
   The updates are only executed at shutdown, not at reboot.
   
@@ -27,28 +26,44 @@
   - automatically search for update at shutdown
   - update at shutdown only, not at reboots
   - use systemd to stay compatible over system updates
-  - integration with all Ubuntu flavors
+  - integration with all Manjaro flavors
   - graphical integration with progress bars
-  - automatically update from one Ubuntu version to another (e.g. 21.04 -> 21.10)
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
-  - logs are saved at /var/log/ubuntu-automatic-update/
+  - logs are saved at /var/log/manjaro-automatic-update/
 
 # Known Issues
-  - Updates have to be downloaded before installation (done at startup)
-  - might be unreliable, as it can't be guaranteed that the required services stay active (will be fixed with systemd 249, which will probably land in Ubuntu     22.04; until then this script should not be used at all)
-
-  These issues will be fixed with Ubuntu 22.04!
+  - Automatically updating the system is not recommended and can
+    potentially break your system!
+    Do not expect help in the official forum should this script break your system!
 # Pictures
 
-  Installing normal Updates:
-  ![Installing normal Updates](https://user-images.githubusercontent.com/19935382/137891911-3862eeac-b4ca-47f0-be1f-7f735848db9b.png)
+  ![Installing Updates](https://user-images.githubusercontent.com/19935382/142771245-d5674862-350c-432b-868b-690527afcff9.png)
   
-  Upgrading Ubuntu version:
-  ![Upgrading Ubuntu version](https://user-images.githubusercontent.com/19935382/137891983-b8e5015e-8f56-4af0-97c1-1eb651490beb.png)
-
+# Installation of Plymouth
+  1. Type in the terminal: ```pamac install plymouth plymouth-theme-manjaro```
+  
+  2. Add ```plymouth``` to the ```HOOKS``` array in ```mkinitcpio.conf```.
+  
+     It must be added after ```base``` and ```udev``` for it to work:
+  
+     - Open ```/etc/mkinitcpio.conf``` with ```sudo nano /etc/mkinitcpio.conf```
+     
+     - The line looks like this afterwards: ```HOOKS="base udev plymouth ..."```
+  3. Make the manjaro theme the default plymouth theme:
+     - Type in your terminal: ```plymouth-set-default-theme -R manjaro```
+  
+  4. Edit the ```grub config```:
+     - Type in your terminal: ```sudo nano /etc/default/grub```
+     - add the word ```splash``` to the list of arguments for the following line:
+     
+       ```GRUB_CMDLINE_LINUX_DEFAULT="quiet splash ..."```
+  5. Update grub:
+     - Type in your terminal: ```sudo update-grub```
   
 # INSTALLATION
+
+  0. Install Plymouth (see above)
 
   1. Clone this Repository & extract the zip
   

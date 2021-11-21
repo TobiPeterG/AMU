@@ -90,8 +90,8 @@
   
 # TODO
   ~~- only apply updates when connected to power AND battery is over 50% charged~~ DONE
+  
   ~~- Make installer work with different terminals~~ DONE
-  - ...
   
 # Contribution
   I'm open and welcome contributions to make this script better and/or available to more distributions.

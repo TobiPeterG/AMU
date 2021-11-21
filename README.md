@@ -69,7 +69,7 @@
   1. Clone this Repository & extract the zip
   
   2. make install.sh executable (right click on the file
-  -> properties -> permissions tab -> "is executable"
+  -> properties -> permissions tab -> "is executable")
 
   3. start install.sh
   
@@ -78,7 +78,7 @@
 # REMOVAL
   
   1. make uninstall.sh executable (right click on the file
-  -> properties -> permissions tab -> "is executable"
+  -> properties -> permissions tab -> "is executable")
   
   2. start uninstall.sh
 

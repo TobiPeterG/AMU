@@ -1,4 +1,4 @@
-# Update Manjaro at shutdown and startup
+# AMU - Automatic Manjaro Updater
   THIS SCRIPT IS ONLY(!) THOUGHT FOR MANJARO-BASED INSTALLATIONS
   AND NOTHING ELSE!  IT WILL NOT WORK AS INTENDED OR MAKE
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
@@ -38,6 +38,7 @@
   - only apply updates when battery is charged to 50% and connected to power (notebook only)
 
 # Known Issues
+  - requires Plymouth
   - Automatically updating the system is not recommended and can
     potentially break your system!
     Do not expect help in the official forum should this script break your system!

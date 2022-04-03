@@ -1,10 +1,10 @@
 [Unit]
 Description=Update on Shutdown
-RequiresMountsFor=/ /home /boot
+RequiresMountsFor=/ /home /boot /var /tmp /etc /var/cache
 DefaultDependencies=no
-Requires=network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
-Upholds=network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
-After=multi-user.target
+Requires=nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
+Upholds=nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
+After=nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service multi-user.target
 Before=systemd-poweroff.service shutdown.target umount.target final.target systemd-halt.service
 
 [Service]

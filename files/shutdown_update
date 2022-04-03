@@ -6,6 +6,8 @@ fun_update() {
     /bin/plymouth system-update --progress=0
     #start a helper function to update the status bar
     fun_plymouth_update & fun_plymouth_update_pid=$!
+    #cancel shutdown to be able to update system
+    systemctl cancel
     #actually update the system, write output to file
     /usr/bin/pamac update -a --force-refresh --enable-downgrade --no-confirm > /var/log/manjaro-automatic-update/update_status.txt
     #remove unneeded dependencies
@@ -13,7 +15,7 @@ fun_update() {
     #stop helper function & set progress to 100% as the update finished
     kill $fun_plymouth_update_pid
     /bin/plymouth system-update --progress=100
-    sleep 3
+    sleep 1
     #change back into shutdown mode
     /bin/plymouth change-mode --shutdown
 }
@@ -88,19 +90,22 @@ then
         do
             sleep 0.5
         done
-        #check if device has a battery, if yes, check if it is charged to more than 50% and is connected to power
-        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || ( [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 50 ] && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -qP '(?<=state:               )charging' );
+        #check if device has a battery, if yes, check if it is charged to more than 90%
+        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 90 ];
         then
+
             #search for updates, proceed if updates have been found
-            /bin/plymouth display-message --text "Searching for Updates..."
+            /bin/plymouth display-message --text "Suche nach Updates..."
             if ! /usr/bin/pamac checkupdates -a; then
                 fun_update & wait
             else
                 #no updates found
-                /bin/plymouth display-message --text "No updates found!"
-                sleep 3
+                /bin/plymouth display-message --text "Keine Updates gefunden!"
+                sleep 1
             fi
             /bin/plymouth display-message --text ""
+            #re-initiate shutdown
+            systemctl poweroff
         fi
     fi
 fi

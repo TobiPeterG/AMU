@@ -3,6 +3,7 @@
   AND NOTHING ELSE!  IT WILL NOT WORK AS INTENDED OR MAKE
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
   USE AT YOUR OWN RISK!
+  POWER LOSS DURING UPDATES CAN LEAVE THE SYSTEM IN AN UNBOOTABLE STATE!
   
   __Using an Ubuntu-based distro? Have a look here: https://github.com/TobiPeterG/ubuntu_automatic_updates__
   
@@ -35,7 +36,7 @@
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
   - logs are saved at /var/log/manjaro-automatic-update/
-  - only apply updates when battery is charged to 50% and connected to power (notebook only)
+  - only apply updates when battery is charged to >90% (notebook only)
 
 # Known Issues
   - requires Plymouth
@@ -56,6 +57,8 @@
      - Open ```/etc/mkinitcpio.conf``` with ```sudo nano /etc/mkinitcpio.conf```
      
      - The line looks like this afterwards: ```HOOKS="base udev plymouth ..."```
+     
+     - If your system drive is encrypted, replace ```encrypt``` with ```plymouth-encrypt```
   
   3. Edit the ```grub config```:
      - Type in your terminal: ```sudo nano /etc/default/grub```
@@ -71,10 +74,12 @@
 
   1. Clone this Repository & extract the zip
   
-  2. make install.sh executable (right click on the file
+  2. optional: replace ```shutdown_update``` with ```shutdown_update_GERMAN``` in the ```files``` folder
+  
+  3. make install.sh executable (right click on the file
   -> properties -> permissions tab -> "is executable")
 
-  3. start install.sh
+  4. start install.sh
   
   That's it! Enjoy!
   

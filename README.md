@@ -36,10 +36,12 @@
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
   - logs are saved at /var/log/manjaro-automatic-update/
+  - log management to keep the 15 newest logs
   - only apply updates when battery is charged to >90% (notebook only)
 
 # Known Issues
   - requires Plymouth
+  - __updating with a wifi connection might not work__ as the connection to the wifi network is closed after logging out. __To fix it__, go to the __network  settings__ of your wifi network and check the checkbox to __allow all users to connect to the network__. Updates should work now when connected to this wifi
   - Automatically updating the system is not recommended and can
     potentially break your system!
     Do not expect help in the official forum should this script break your system!

@@ -146,7 +146,7 @@ then
             sleep 0.5
         done
         #check if device has a battery, if yes, check if it is charged to more than 90%
-        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 50 ];
+        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 90 ];
         then
             #log that date & that update started and clear file
             echo -e "Datum: $date\nUpdate gestartet..." > "$log_file"

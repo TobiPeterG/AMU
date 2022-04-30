@@ -56,6 +56,8 @@
      - Open ```/etc/mkinitcpio.conf``` with ```sudo nano /etc/mkinitcpio.conf```
      
      - The line looks like this afterwards: ```HOOKS="base udev plymouth ..."```
+     
+     - update your initial ramdisk: ```sudo mkinitcpio -P```
   
   3. Edit the ```grub config```:
      - Type in your terminal: ```sudo nano /etc/default/grub```

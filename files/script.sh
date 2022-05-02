@@ -32,7 +32,7 @@ then
     cp /etc/default/grub  /etc/default/grub-backup
     #add / change required init hooks
     sed -i 's/HOOKS="base udev/HOOKS="base udev plymouth/' /etc/mkinitcpio.conf
-    sed -i 's/encrypt resume/plymouth-encrypt resume/' /etc/mkinitcpio.conf
+    sed -i 's/encrypt filesystems/plymouth-encrypt filesytems/' /etc/mkinitcpio.conf
     #change grub config to show plymouth
     sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash/' /etc/default/grub
     sudo mkinitcpio -P

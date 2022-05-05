@@ -31,8 +31,8 @@ then
     sed -i 's/encrypt filesystems/plymouth-encrypt filesystems/' /etc/mkinitcpio.conf
     #change grub config to show plymouth
     sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash/' /etc/default/grub
-    sudo mkinitcpio -P
-    sudo update-grub
+    mkinitcpio -P
+    update-grub
 fi
 
 
@@ -40,3 +40,6 @@ fi
 sed -i 's/_//' /usr/share/plymouth/themes/manjaro/manjaro.plymouth
 #set the manjaro theme as default
 plymouth-set-default-theme -R manjaro
+
+echo -e "AMU has been successfully installed!\nPress any key to close this window"
+read

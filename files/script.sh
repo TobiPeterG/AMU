@@ -19,7 +19,7 @@ fun_chroot() {
     then
         mount -o subvol=@,ssd,noatime,commit=120,compress=zstd $system_device /mnt
     else
-        mount -o $system_device /mnt
+        mount $system_device /mnt
     fi
 
     for i in /dev /dev/pts /proc /sys /run; do sudo mount -B $i /mnt$i; done

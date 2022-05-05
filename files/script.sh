@@ -9,12 +9,17 @@ fun_chroot() {
     script_folder=${PWD##*/}/files
     read -p 'What device is your system installed on (e.g. /dev/sda1)? ' system_device
     device_uuid=luks-$(blkid -o value -s UUID $system_device)
-
-    if cryptsetup luksOpen $system_device $device_uuid
+    umount /tmp/*
+    if ! echo "$(ls /dev/mapper)" | grep -q "$device_uuid";
     then
+        if cryptsetup luksOpen $system_device $device_uuid
+        then
+            system_device=/dev/mapper/$device_uuid
+        fi
+    else 
         system_device=/dev/mapper/$device_uuid
     fi
-
+    
     if [ $(lsblk -no FSTYPE $system_device) = "btrfs" ]
     then
         mount -o subvol=@,ssd,noatime,commit=120,compress=zstd $system_device /mnt

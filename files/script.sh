@@ -6,7 +6,7 @@ read _
 
 fun_chroot() {
 
-    script_folder=${PWD##*/}
+    script_folder=${PWD##*/}/files
     read -p 'What device is your system installed on (e.g. /dev/sda1)? ' system_device
     device_uuid=luks-$(blkid -o value -s UUID $system_device)
 

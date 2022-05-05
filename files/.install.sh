@@ -4,8 +4,8 @@ script_path="$1"
 
 #create required folders, copy files to correct location, make scripts executable
 mkdir /var/log/manjaro-automatic-update/
-cp ${script_path}/shutdown_update /usr/local/bin/shutdown_update
-cp ${script_path}/startup_update /usr/local/bin/startup_update
+cp ${script_path}/shutdown_update /usr/local/bin/update_shutdown
+cp ${script_path}/startup_update /usr/local/bin/update_startup
 cp ${script_path}/update_shutdown.service /etc/systemd/system/update_shutdown.service
 cp ${script_path}/update_startup.service /etc/systemd/system/update_startup.service
 
@@ -16,8 +16,8 @@ systemctl daemon-reload
 systemctl enable update_startup.service
 systemctl enable update_shutdown.service
 systemctl start update_shutdown.service
-chmod +x /usr/local/bin/shutdown_update
-chmod +x /usr/local/bin/startup_update
+chmod +x /usr/local/bin/update_shutdown
+chmod +x /usr/local/bin/update_startup
 
 #install plymouth, if not installed
 if ! command -v /bin/plymouth;

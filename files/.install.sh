@@ -4,8 +4,8 @@ script_path="$1"
 
 #create required folders, copy files to correct location, make scripts executable
 mkdir /var/log/manjaro-automatic-update/
-cp ${script_path}/shutdown_update /usr/local/bin/update_shutdown
-cp ${script_path}/startup_update /usr/local/bin/update_startup
+cp ${script_path}/update_shutdown /usr/local/bin/update_shutdown
+cp ${script_path}/update_shutdown /usr/local/bin/update_startup
 cp ${script_path}/update_shutdown.service /etc/systemd/system/update_shutdown.service
 cp ${script_path}/update_startup.service /etc/systemd/system/update_startup.service
 

@@ -3,17 +3,33 @@
 fun_update() {
     #change plymouth into the updates mode and show 0% as first progress
     /bin/plymouth change-mode --updates
-    /bin/plymouth system-update --progress=0
+    display_update 0
+
     #start a helper function to update the status bar
     fun_plymouth_update & fun_plymouth_update_pid=$!
+
+    #cancel shutdown to be able to update system
+    systemctl cancel
+
     #actually update the system, write output to file
-    /usr/bin/pamac update -a --force-refresh --enable-downgrade --no-confirm > /var/log/manjaro-automatic-update/update_status.txt
+    display_message "Starting Pamac update"
+    /usr/bin/pamac update -a --force-refresh --enable-downgrade --no-confirm >> "$log_file"
     #remove unneeded dependencies
-    /usr/bin/pamac remove -o --no-confirm >> /var/log/manjaro-automatic-update/update_status.txt
+    /usr/bin/pamac remove -o --no-confirm >> "$log_file"
     #stop helper function & set progress to 100% as the update finished
     kill $fun_plymouth_update_pid
-    /bin/plymouth system-update --progress=100
-    sleep 3
+    display_message "Pamac update finished"
+
+    display_message "Starting Flatpak update"
+    #start flatpak update & plymouth status updater for flatpak updates (workaround)
+    fun_plymouth_update_flatpak & fun_plymouth_update_flatpak_pid=$!
+    flatpak update -y >> "$log_file"
+    kill $fun_plymouth_update_flatpak_pid
+    display_message "Flatpak update finished"
+
+    display_update 100
+    display_message "All updates finished!"
+    sleep 1
     #change back into shutdown mode
     /bin/plymouth change-mode --shutdown
 }
@@ -22,7 +38,7 @@ fun_plymouth_update() {
     while :
     do
         #search in the file written from pamac for patterns indicating a download or progress and only take the last found match
-        grepper=$(grep -aoP '((^[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes)\/[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes))|(?<=\[)[0-9]*\/[0-9]*(?=\]$))' /var/log/manjaro-automatic-update/update_status.txt | tail -1)
+        grepper=$(grep -aoP '((^[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes)\/[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes))|(?<=\[)[0-9]*\/[0-9]*(?=\]$))' "$log_file" | tail -1)
         #checks if pamac is still downloading
         if echo "$grepper" | grep -qP '(kB|MB|GB|Bytes)';
         then
@@ -73,10 +89,51 @@ fun_plymouth_update() {
         preprog=$(echo "scale=2 ; $grepper * 100" | bc)
         prog=${preprog%.*}
         #display the percentage
-        /bin/plymouth system-update --progress "$prog"
+        display_update "$prog"
+
         sleep 0.1
     done
 }
+
+fun_plymouth_update_flatpak() {
+while :
+    do
+        #get progress of update, only last one interesting
+        prog=$(grep -aoP '[0-9]*(?=%)' "$log_file" | tail -1)
+        #display the percentage
+        display_update "$prog"
+        sleep 0.1
+    done
+
+}
+#helper function to show/log messages
+display_message() {
+    #log the message and display it (in the console)
+    echo "$1" >> "$log_file"
+    /bin/plymouth display-message --text "$1"
+
+}
+#helper function to show update progress
+display_update() {
+    #update progress only when the percentage is >=0
+    if [ $1 -ge 0 ];
+    then
+        /bin/plymouth system-update --progress $1
+        #log every new progress percentage but don't spam it
+        if [ $1 -ne $last ];
+        then
+            display_message "Update progress: $1%"
+            last=$1
+        fi
+    fi
+}
+
+#define variables
+log_location="/var/log/manjaro-automatic-update/"
+date="$(date +'%Y_%m_%d-%H_%M_%S')"
+log_name="${date}.log"
+log_file="$log_location$log_name"
+last=-1
 #only continue when plymouth is installed
 if command -v /bin/plymouth;
 then
@@ -88,19 +145,28 @@ then
         do
             sleep 0.5
         done
-        #check if device has a battery, if yes, check if it is charged to more than 50% and is connected to power
-        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || ( [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 50 ] && upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -qP '(?<=state:               )charging' );
+        #check if device has a battery, if yes, check if it is charged to more than 90%
+        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 90 ];
         then
+            #log that date & that update started and clear file
+            echo -e "Datum: $date\nUpdate startet..." > "$log_file"
             #search for updates, proceed if updates have been found
-            /bin/plymouth display-message --text "Searching for Updates..."
-            if ! /usr/bin/pamac checkupdates -a; then
+            display_message "Looking for updates..."
+            if ! /usr/bin/pamac checkupdates -a;
+            then
                 fun_update & wait
             else
                 #no updates found
-                /bin/plymouth display-message --text "No updates found!"
-                sleep 3
+                display_message "No updates found!"
+                sleep 1
             fi
-            /bin/plymouth display-message --text ""
+            display_message ""
+            #create symlink to latest log
+            ln -sf $log_file "${log_location}latest.log"
+            #keep only the 15 newest log files + latest.log
+            ls -d -1tr ${log_location}* | head -n -16 | xargs -d '\n' rm -f
+            #re-initiate shutdown
+            systemctl poweroff
         fi
     fi
 fi

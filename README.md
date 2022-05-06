@@ -3,8 +3,8 @@
   AND NOTHING ELSE!  IT WILL NOT WORK AS INTENDED OR MAKE
   THE SYSTEM UNUSABLE ON OTHER INSTALLATIONS!
   USE AT YOUR OWN RISK!
+  POWER LOSS DURING UPDATES CAN LEAVE THE SYSTEM IN AN UNBOOTABLE STATE!
   
-  __Using an Ubuntu-based distro? Have a look here: https://github.com/TobiPeterG/ubuntu_automatic_updates__
   
   This script will install my custom script to update your
   system when it's being shutdown. It is tested on Manjaro 21.1.6, but should
@@ -15,13 +15,8 @@
 
   This script also includes a service that updates your
   flatpak and snap packages at startup.
-
-  __In order for the script to work, you need to install Plymouth
-  using the installation guide here:
-  https://wiki.manjaro.org/index.php/Plymouth
-  A step-by-step explanation on what to do is also given down below!__
   
-  Pamac (the default package manager) is used to update the system!
+  __Pamac (the default package manager of Manjaro) is used to update the system!__
   
   The updates are only executed at shutdown, not at reboot.
   
@@ -35,48 +30,36 @@
   - updates your flatpak and snap packages at startup
   - independant of the desktop environment
   - logs are saved at /var/log/manjaro-automatic-update/
-  - only apply updates when battery is charged to 50% and connected to power (notebook only)
+  - log management to keep the 15 newest logs
+  - only apply updates when battery is charged to >90% (notebook only)
+  - installable using live system or existing system
+  - automatic plymouth installation
+  - backup existing configuration
+  - works with encrypted drives
 
 # Known Issues
-  - requires Plymouth
+  - __updating with a wifi connection might not work__ as the connection to the wifi network is closed after logging out. __To fix it__, go to the __network  settings__ of your wifi network and check the checkbox to __allow all users to connect to the network__. Updates should work now when connected to this wifi
+  - if installed in a live environment, you have to know the name of the partition you installed Manjaro onto
   - Automatically updating the system is not recommended and can
     potentially break your system!
     Do not expect help in the official forum should this script break your system!
+    
 # Pictures
 
   ![Installing Updates](https://user-images.githubusercontent.com/19935382/142771245-d5674862-350c-432b-868b-690527afcff9.png)
   
-# Installation of Plymouth
-  1. Type in the terminal: ```pamac install plymouth plymouth-theme-manjaro```
-  
-  2. Add ```plymouth``` to the ```HOOKS``` array in ```mkinitcpio.conf```.
-  
-     It must be added after ```base``` and ```udev``` for it to work:
-  
-     - Open ```/etc/mkinitcpio.conf``` with ```sudo nano /etc/mkinitcpio.conf```
-     
-     - The line looks like this afterwards: ```HOOKS="base udev plymouth ..."```
-     
-     - update your initial ramdisk: ```sudo mkinitcpio -P```
-  
-  3. Edit the ```grub config```:
-     - Type in your terminal: ```sudo nano /etc/default/grub```
-     - add the word ```splash``` to the list of arguments for the following line:
-     
-       ```GRUB_CMDLINE_LINUX_DEFAULT="quiet splash ..."```
-  4. Update grub:
-     - Type in your terminal: ```sudo update-grub```
-  
 # INSTALLATION
-
-  0. Install Plymouth (see above)
 
   1. Clone this Repository & extract the zip
   
-  2. make install.sh executable (right click on the file
+  2. optional: replace ```shutdown_update``` with ```shutdown_update_GERMAN``` in the ```files``` folder
+  
+  3. make install.sh executable (right click on the file
   -> properties -> permissions tab -> "is executable")
 
-  3. start install.sh
+  4. start install.sh
+
+  5. follow instructions
   
   That's it! Enjoy!
   
@@ -102,6 +85,6 @@
   solution.
   If you know a better approach, feel free to open a pull request!
   
-  Should you encounter any issue, please open an issue. Use at your own risk!
+  __Should you encounter any problem, please open an issue. Use at your own risk!__
   
   You can tip me anytime via paypal: https://paypal.me/tobiasgoergens :)

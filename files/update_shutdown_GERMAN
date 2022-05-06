@@ -1,0 +1,172 @@
+#!/bin/sh
+
+fun_update() {
+    #change plymouth into the updates mode and show 0% as first progress
+    /bin/plymouth change-mode --updates
+    display_update 0
+
+    #start a helper function to update the status bar
+    fun_plymouth_update & fun_plymouth_update_pid=$!
+
+    #cancel shutdown to be able to update system
+    systemctl cancel
+
+    #actually update the system, write output to file
+    display_message "Starte Pamac-Update"
+    /usr/bin/pamac update -a --force-refresh --enable-downgrade --no-confirm >> "$log_file"
+    #remove unneeded dependencies
+    /usr/bin/pamac remove -o --no-confirm >> "$log_file"
+    #stop helper function & set progress to 100% as the update finished
+    kill $fun_plymouth_update_pid
+    display_message "Pamac-Update abgeschlossen"
+
+    display_message "Starte Flatpak-Update"
+    #start flatpak update & plymouth status updater for flatpak updates (workaround)
+    fun_plymouth_update_flatpak & fun_plymouth_update_flatpak_pid=$!
+    flatpak update -y >> "$log_file"
+    kill $fun_plymouth_update_flatpak_pid
+    display_message "Flatpak-Update abgeschlossen"
+
+    display_update 100
+    display_message "Alle Updates abgeschlossen!"
+    sleep 1
+    #change back into shutdown mode
+    /bin/plymouth change-mode --shutdown
+}
+
+fun_plymouth_update() {
+    while :
+    do
+        #search in the file written from pamac for patterns indicating a download or progress and only take the last found match
+        grepper=$(grep -aoP '((^[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes)\/[0-9]*(,[0-9]*)?( | )(GB|kB|MB|Bytes))|(?<=\[)[0-9]*\/[0-9]*(?=\]$))' "$log_file" | tail -1)
+        #checks if pamac is still downloading
+        if echo "$grepper" | grep -qP '(kB|MB|GB|Bytes)';
+        then
+            #units of ongoing download may not be the same. e.g. it might show that 200MB of 1.5GB are downloaded; prepare conversion
+            #set numbers e.g. first would be 200 & second 1.5
+            first=$(echo "$grepper" | grep -aoP '[0-9]*(,[0-9]*)?(?=( | )(GB|kB|MB|Bytes)\/)')
+            second=$(echo "$grepper" | grep -aoP '(?<=\/)[0-9]*(,[0-9]*)?')
+            #set units e.g. head would be MB & tail GB
+            head=$(echo "$grepper" | grep -aoP '(kB|MB|GB|Bytes)' | head -1)
+            tail=$(echo "$grepper" | grep -aoP '(kB|MB|GB|Bytes)' | tail -1)
+            #check what unit first has and set a counter
+            if echo "$head" | grep -qP 'Bytes';
+            then
+                counter=0
+            elif echo "$head" | grep -qP 'kB';
+            then
+                counter=1
+            elif echo "$head" | grep -qP 'MB';
+            then
+                counter=2
+            elif echo "$head" | grep -qP 'GB';
+            then
+                counter=3
+            fi
+            #check what unit second has and calculate difference between head and tail
+            if echo "$tail" | grep -qP 'Bytes';
+            then
+                counter=$((0-counter))
+            elif echo "$tail" | grep -qP 'kB';
+            then
+                counter=$((1-counter))
+            elif echo "$tail" | grep -qP 'MB';
+            then
+                counter=$((2-counter))
+            elif echo "$tail" | grep -qP 'GB';
+            then
+                counter=$((3-counter))
+            fi
+            #check if head was actualy bigger than tail; should never happen
+            if [ 0 -gt $counter ];
+            then
+                counter=0
+            fi
+            #devide first by second, but converted into the unit of first
+            grepper=$(echo "scale=2; ${first/,/.} / (${second/,/.} * (1000^$counter))" | bc)
+        fi
+        #get percentage and "floor" number
+        preprog=$(echo "scale=2 ; $grepper * 100" | bc)
+        prog=${preprog%.*}
+        #display the percentage
+        display_update "$prog"
+
+        sleep 0.1
+    done
+}
+
+fun_plymouth_update_flatpak() {
+while :
+    do
+        #get progress of update, only last one interesting
+        prog=$(grep -aoP '[0-9]*(?=%)' "$log_file" | tail -1)
+        #display the percentage
+        display_update "$prog"
+        sleep 0.1
+    done
+
+}
+#helper function to show/log messages
+display_message() {
+    #log the message and display it (in the console)
+    echo "$1" >> "$log_file"
+    /bin/plymouth display-message --text "$1"
+
+}
+#helper function to show update progress
+display_update() {
+    #update progress only when the percentage is >=0
+    if [ $1 -ge 0 ];
+    then
+        /bin/plymouth system-update --progress $1
+        #log every new progress percentage but don't spam it
+        if [ $1 -ne $last ];
+        then
+            display_message "Update-Fortschritt: $1%"
+            last=$1
+        fi
+    fi
+}
+
+#define variables
+log_location="/var/log/manjaro-automatic-update/"
+date="$(date +'%Y_%m_%d-%H_%M_%S')"
+log_name="${date}.log"
+log_file="$log_location$log_name"
+last=-1
+#only continue when plymouth is installed
+if command -v /bin/plymouth;
+then
+    #check if system is being rebooted instead of being shutdown
+    if ! (systemctl list-jobs | grep -E -q 'reboot.target.*start');
+    then
+        #wait until plymouthd is started and something is actually displayed
+        while ! /bin/plymouth --ping;
+        do
+            sleep 0.5
+        done
+        #check if device has a battery, if yes, check if it is charged to more than 90%
+        if ! upower -e | grep -qP '/org/freedesktop/UPower/devices/battery_BAT1' || [ "$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -aoP '(?<=percentage:          )[0-9]*(?=%)')" -ge 90 ];
+        then
+            #log that date & that update started and clear file
+            echo -e "Datum: $date\nUpdate gestartet..." > "$log_file"
+            #search for updates, proceed if updates have been found
+            display_message "Suche nach Updates..."
+            if ! /usr/bin/pamac checkupdates -a;
+            then
+                fun_update & wait
+            else
+                #no updates found
+                display_message "Keine Updates gefunden!"
+                sleep 1
+            fi
+            display_message ""
+            #create symlink to latest log
+            ln -sf $log_file "${log_location}latest.log"
+            #keep only the 15 newest log files + latest.log
+            ls -d -1tr ${log_location}* | head -n -16 | xargs -d '\n' rm -f
+            #re-initiate shutdown
+            systemctl poweroff
+        fi
+    fi
+fi

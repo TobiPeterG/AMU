@@ -15,13 +15,8 @@
 
   This script also includes a service that updates your
   flatpak and snap packages at startup.
-
-  __In order for the script to work, you need to install Plymouth
-  using the installation guide here:
-  https://wiki.manjaro.org/index.php/Plymouth
-  A step-by-step explanation on what to do is also given down below!__
   
-  Pamac (the default package manager) is used to update the system!
+  __Pamac (the default package manager of Manjaro) is used to update the system!__
   
   The updates are only executed at shutdown, not at reboot.
   

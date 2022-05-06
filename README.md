@@ -48,7 +48,6 @@
 
   ![Installing Updates](https://user-images.githubusercontent.com/19935382/142771245-d5674862-350c-432b-868b-690527afcff9.png)
   
-  
 # INSTALLATION
 
   1. Clone this Repository & extract the zip

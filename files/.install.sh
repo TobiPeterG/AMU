@@ -40,5 +40,5 @@ sed -i 's/_//' /usr/share/plymouth/themes/manjaro/manjaro.plymouth
 plymouth-set-default-theme -R manjaro
 update-grub
 
-echo -e "AMU has been successfully installed!\nPress any key to close this window"
+echo -e "AMU has been successfully installed!\nPress [ENTER] to close this window"
 read

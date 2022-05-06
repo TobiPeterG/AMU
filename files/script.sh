@@ -38,15 +38,15 @@ if echo $(df -kh) |grep -q live; then
     read -p "" -n1 yn
     case $yn in
         [Yy]* ) fun_chroot;;
-        [Nn]* ) sh .install.sh ".";;
+        [Nn]* ) sh .install.sh "./files";;
         * ) fun_chroot;;
     esac
 else
-    echo "This system seems to already be installed on your PC. Is this true? [Y/n]"
+    echo "This system already seems to be installed on your PC. Is this true? [Y/n]"
     read -p "" -n1 yn
     case $yn in
-        [Yy]* ) sh .install.sh ".";;
+        [Yy]* ) sh .install.sh "./files";;
         [Nn]* ) fun_chroot;;
-        * ) sh .install.sh ".";;
+        * ) sh .install.sh "./files";;
     esac
 fi

@@ -11,7 +11,7 @@ Before=systemd-poweroff.service shutdown.target umount.target final.target syste
 #DynamicUser=yes
 Type=oneshot
 ExecStart=/bin/true
-ExecStop=/usr/local/bin/shutdown_update
+ExecStop=/usr/local/bin/update_shutdown
 TimeoutSec=infinity
 RemainAfterExit=yes
 

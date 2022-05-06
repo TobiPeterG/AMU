@@ -1,5 +1,7 @@
 #!/bin/sh
+#mount all partitions in fstab file
 mount -a
+#define vars
 script_path="$1"
 
 #create required folders, copy files to correct location, make scripts executable
@@ -12,10 +14,12 @@ cp ${script_path}/update_startup.service /etc/systemd/system/update_startup.serv
 #the poweroff.target has to be modified to remove the timeout
 cp -r ${script_path}/poweroff.target.d /etc/systemd/system/
 
+#configure system services
 systemctl daemon-reload
 systemctl enable update_startup.service
 systemctl enable update_shutdown.service
 systemctl start update_shutdown.service
+#make scripts executable
 chmod +x /usr/local/bin/update_shutdown
 chmod +x /usr/local/bin/update_startup
 

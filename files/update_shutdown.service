@@ -2,15 +2,16 @@
 Description=Update on Shutdown
 RequiresMountsFor=/ /home /boot /var /tmp /etc /var/cache
 DefaultDependencies=no
-Requires=nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
-Upholds=nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
-After=nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service multi-user.target
+Requires=network.target nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
+Upholds=network.target nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service network-online.target multi-user.target local-fs-pre.target local-fs.target NetworkManager.service
+After=network.target nss-lookup.target accounts-daemon.service dbus-org.freedesktop.locale1.service systemd-resolved.service pamac-daemon.service upower.service dbus.service multi-user.target
 Before=systemd-poweroff.service shutdown.target umount.target final.target systemd-halt.service
 
 [Service]
+#DynamicUser=yes
 Type=oneshot
 ExecStart=/bin/true
-ExecStop=/usr/share/services/shutdown_update
+ExecStop=/usr/local/bin/update_shutdown
 TimeoutSec=infinity
 RemainAfterExit=yes
 

@@ -5,7 +5,7 @@ After=network-online.target multi-user.target local-fs.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/startup_update
+ExecStart=/usr/local/bin/update_startup
 TimeoutSec=infinity
 
 [Install]
